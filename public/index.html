@@ -6,32 +6,246 @@
     <title>叙事拓扑挑战 - 可能世界理论创意干预</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #a5b4fc;
+            --bg-gradient: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #6366f1 100%);
+            --card-bg: #ffffff;
+            --card-hover: #f8faff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-radius: 20px;
+            --shadow: 0 10px 40px rgba(0,0,0,0.15);
+            --shadow-hover: 0 15px 50px rgba(99, 102, 241, 0.25);
+        }
         body {
-            background: linear-gradient(135deg, #4b0082 0%, #8a2be2 100%);
+            background: var(--bg-gradient);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 24px 16px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
         }
-        .container { max-width: 1100px; width: 100%; background: white; border-radius: 24px; box-shadow: 0 25px 70px rgba(0,0,0,0.35); overflow: hidden; }
-        .header { background: linear-gradient(135deg, #4b0082 0%, #8a2be2 100%); color: white; padding: 40px 32px; text-align: center; }
-        .header h1 { font-size: 32px; margin-bottom: 8px; }
-        .content { padding: 40px 32px; }
-        textarea { width: 100%; padding: 20px; border: 2px solid #e0e0e0; border-radius: 16px; font-size: 16px; line-height: 1.6; resize: vertical; min-height: 160px; }
-        textarea:focus { outline: none; border-color: #8a2be2; }
-        button { padding: 16px 32px; border: none; border-radius: 50px; font-size: 18px; font-weight: 600; cursor: pointer; background: linear-gradient(135deg, #4b0082 0%, #8a2be2 100%); color: white; margin-top: 20px; box-shadow: 0 8px 20px rgba(138,43,226,0.3); }
-        .result { margin-top: 32px; }
-        .framework-card { background: #f8f4ff; border-radius: 16px; padding: 20px; margin-bottom: 20px; border-left: 6px solid #8a2be2; cursor: pointer; transition: all 0.2s; }
-        .framework-card:hover { background: #f0e6ff; transform: translateY(-2px); }
-        .framework-card.selected { background: #e6d9ff; border-left-color: #4b0082; }
-        .framework-name { font-size: 15px; color: #4b0082; font-weight: 700; }
-        .logic { margin: 12px 0; font-size: 15px; line-height: 1.6; }
-        .cognitive { font-size: 13px; color: #555; font-style: italic; }
-        .selection-info { margin: 16px 0; padding: 12px; background: #e8f4f8; border-radius: 12px; font-size: 14px; text-align: center; }
-        .final-note { margin-top: 30px; padding: 20px; background: #f0e6ff; border-radius: 16px; text-align: center; font-size: 15px; line-height: 1.7; }
-        .footer { padding: 24px; text-align: center; font-size: 13px; color: #888; border-top: 1px solid #eee; }
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .header {
+            background: var(--bg-gradient);
+            color: white;
+            padding: 48px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+        .content {
+            padding: 40px 32px;
+        }
+        .input-section {
+            margin-bottom: 32px;
+        }
+        textarea {
+            width: 100%;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 16px;
+            line-height: 1.7;
+            resize: vertical;
+            min-height: 180px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+        button {
+            padding: 16px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            background: var(--bg-gradient);
+            color: white;
+            margin-top: 20px;
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(99, 102, 241, 0.4);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .result {
+            margin-top: 40px;
+        }
+        .result-header {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .framework-card {
+            background: var(--card-hover);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--primary-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .framework-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        .framework-card:hover {
+            background: #f1f0ff;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+        .framework-card:hover::before {
+            transform: scaleY(1);
+        }
+        .framework-card.selected {
+            background: #ede9fe;
+            border-left-color: var(--primary-dark);
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.2);
+        }
+        .framework-card.selected::before {
+            transform: scaleY(1);
+        }
+        .framework-name {
+            font-size: 16px;
+            color: var(--primary-dark);
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .framework-name::before {
+            content: '🔹';
+            font-size: 14px;
+        }
+        .logic {
+            margin: 12px 0;
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-primary);
+        }
+        .cognitive {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-style: italic;
+            padding: 8px 12px;
+            background: rgba(99, 102, 241, 0.08);
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+        .selection-info {
+            margin: 20px 0;
+            padding: 16px;
+            background: #f0f9ff;
+            border-radius: 12px;
+            font-size: 14px;
+            text-align: center;
+            color: #0369a1;
+            border: 1px solid #bae6fd;
+        }
+        .final-note {
+            margin-top: 36px;
+            padding: 24px;
+            background: #f8faff;
+            border-radius: 16px;
+            text-align: center;
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            border: 1px solid #e2e8f0;
+        }
+        .footer {
+            padding: 24px;
+            text-align: center;
+            font-size: 13px;
+            color: #94a3b8;
+            border-top: 1px solid #f1f5f9;
+            background: #fafafa;
+        }
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--primary);
+            font-size: 18px;
+        }
+        .error {
+            color: #dc2626;
+            padding: 20px;
+            background: #fef2f2;
+            border-radius: 12px;
+            border: 1px solid #fecaca;
+            text-align: center;
+        }
+        /* 解析AI返回的markdown格式 */
+        .result h3 {
+            font-size: 22px;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        .result ol {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        .result li {
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
     </style>
 </head>
 <body>
@@ -41,28 +255,49 @@
         <p>基于 Ryan (1991) & Bell & Ryan (2019) 的可能世界理论 · AI创意干预工具</p>
     </div>
     <div class="content">
-        <textarea id="userInput" placeholder="请输入你的故事大纲（100-150字即可）&#10"></textarea>
-        <button id="generateBtn">🚀 启动拓扑挑战</button>
+        <div class="input-section">
+            <textarea id="userInput" placeholder="请输入你的故事大纲（100-150字即可）
+例如：生物学博士李明为寻稀有植物深入亚马逊，与向导阿卡卷入古老部族纷争..."></textarea>
+            <button id="generateBtn">🚀 启动拓扑挑战</button>
+        </div>
         <div id="resultArea" class="result"></div>
     </div>
-    <div class="footer">实验用途 · 严格过程导向 · 仅提供思考框架</div>
+    <div class="footer">
+        实验用途 · 严格过程导向 · 仅提供思考框架
+    </div>
 </div>
 
 <script>
     const generateBtn = document.getElementById('generateBtn');
     const userInput = document.getElementById('userInput');
     const resultArea = document.getElementById('resultArea');
-    let currentFrameworks = [];
     let selectedSet = new Set();
+
+    // 简单markdown转HTML（适配AI返回的格式）
+    function mdToHtml(md) {
+        let html = md
+            .replace(/### (.*?)\n/g, '<h3>$1</h3>')
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\n\n/g, '</p><p>')
+            .replace(/\n/g, '<br>')
+            .replace(/1\.\s\*\*(.*?)\*\*:/g, '<div class="framework-card" data-idx="$1"><div class="framework-name">$1</div>')
+            .replace(/\*\*逻辑指令\*\*:/g, '<div class="logic"><strong>逻辑指令：</strong>')
+            .replace(/\*\*认知提示\*\*:/g, '</div><div class="cognitive"><strong>认知提示：</strong>')
+            .replace(/2\.\s\*\*(.*?)\*\*:/g, '</div></div><div class="framework-card" data-idx="$1"><div class="framework-name">$1</div>')
+            .replace(/3\.\s\*\*(.*?)\*\*:/g, '</div></div><div class="framework-card" data-idx="$1"><div class="framework-name">$1</div>')
+            .replace(/4\.\s\*\*(.*?)\*\*:/g, '</div></div><div class="framework-card" data-idx="$1"><div class="framework-name">$1</div>')
+            .replace(/---/g, '</div></div><div class="final-note">');
+        return html;
+    }
 
     generateBtn.addEventListener('click', async () => {
         const text = userInput.value.trim();
         if (!text) {
-            resultArea.innerHTML = '<div style="color:#d32f2f;padding:20px;background:#ffebee;border-radius:12px;">请输入故事大纲</div>';
+            resultArea.innerHTML = '<div class="error">请输入故事大纲</div>';
             return;
         }
 
-        resultArea.innerHTML = '<div style="text-align:center;padding:60px;color:#8a2be2;font-size:18px;">🔄 正在分析大纲并生成个性化拓扑挑战……</div>';
+        resultArea.innerHTML = '<div class="loading">🔄 正在分析大纲并生成个性化拓扑挑战……</div>';
 
         try {
             const res = await fetch('/api/generate', {
@@ -73,13 +308,18 @@
             const data = await res.json();
             if (data.error) throw new Error(data.error);
 
-            resultArea.innerHTML = data.html;
+            // 把AI返回的纯文本转成美观的HTML
+            resultArea.innerHTML = `
+                <div class="result-header">📋 为你匹配的叙事拓扑框架</div>
+                ${mdToHtml(data.html)}
+                <div class="selection-info">已选择 <span id="selectedCount">0</span> 个框架</div>
+            `;
 
             // 绑定点击选择
             const cards = document.querySelectorAll('.framework-card');
-            cards.forEach(card => {
+            cards.forEach((card, idx) => {
+                card.dataset.idx = idx;
                 card.addEventListener('click', () => {
-                    const idx = parseInt(card.dataset.idx);
                     if (selectedSet.has(idx)) {
                         selectedSet.delete(idx);
                         card.classList.remove('selected');
@@ -91,7 +331,8 @@
                 });
             });
         } catch (err) {
-            resultArea.innerHTML = '<div style="color:#d32f2f;padding:20px;background:#ffebee;border-radius:12px;">生成失败，请稍后重试</div>';
+            resultArea.innerHTML = '<div class="error">生成失败，请稍后重试</div>';
+            console.error(err);
         }
     });
 
