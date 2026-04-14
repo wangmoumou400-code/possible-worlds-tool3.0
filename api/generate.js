@@ -47,30 +47,35 @@ export default async function handler(req, res) {
 记住：我只提供了思考框架，最终的变体必须100%由你自己创作。`;
 
   try {
-    const response = await fetch('https://api.siliconflow.cn/v1/chat/completions', {
+    const response = await fetch('https://models.inference.ai.azure.com/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.SILICONFLOW_API_KEY}`
+        'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`
       },
       body: JSON.stringify({
-        model: 'deepseek-ai/DeepSeek-R1',
+        model: 'gpt-4o',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userInput }
         ],
         temperature: 0.7,
-        max_tokens: 800
+        max_tokens: 900
       })
     });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`GitHub Models API 错误 ${response.status}:`, errorText);
+      return res.status(response.status).json({ error: `API 错误 ${response.status}` });
+    }
 
     const data = await response.json();
     const content = data.choices[0].message.content.trim();
 
-    res.status(200).json({ 
-      html: content   // 直接返回完整HTML格式的输出，方便前端展示
-    });
+    res.status(200).json({ html: content });
   } catch (err) {
-    res.status(500).json({ error: '生成失败，请稍后重试' });
+    console.error('Handler 异常:', err);
+    res.status(500).json({ error: '生成失败: ' + err.message });
   }
 }
