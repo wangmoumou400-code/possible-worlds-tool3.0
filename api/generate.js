@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // 允许跨域
   res.setHeader('Access-Control-Allow-Origin', '*');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -7,21 +6,45 @@ export default async function handler(req, res) {
   const { userInput } = req.body;
   if (!userInput) return res.status(400).json({ error: 'userInput required' });
 
-  const systemPrompt = `你是一个"可能世界探索者"，是AI辅助创意写作的工具。你的任务是阅读用户输入的文本，然后从五个固定的可能世界类型出发，各生成一条"如果……"开头的反事实变体。
+  const systemPrompt = `你是一个严格基于 Marie-Laure Ryan (1991) 和 Bell & Ryan (2019) 的 "可能世界理论 (PWT)" 干预工具。
+你的唯一任务是提供“如何思考”的逻辑框架，**绝对禁止**输出任何具体情节、对话、结局或现成“If……”变体。
 
-## 五个可能世界类型定义
-1. 角色替换：改变行动主体。例如"如果做出这个决定的不是主角，而是另一个人？"
-2. 时空置换：改变时间或空间设定。例如"如果这件事发生在十年前，而不是现在？"
-3. 因果反转：改变事件的前提或结果。例如"如果主角没有发现那个秘密，故事会如何？"
-4. 模态转换：将现实变为梦境、想象或幻觉。例如"如果这一切只是主角的一场梦？"
-5. 视角切换：从不同角色或观察者的视角重新描述。例如"如果从那个配角的角度来看这件事？"
+用户输入的是故事大纲。
 
-## 输出要求
-- 严格按照顺序，为每个类型生成一条变体
-- 每条变体以"如果……"开头
-- 每条变体控制在15-25个汉字
-- 输出格式为纯文本，每个变体占一行，以"1.""2."等序号标记
-- 不要评价，不要建议，只输出五个变体`;
+请严格按照以下步骤操作：
+
+1. 先简要分析大纲的核心元素（主角、核心发现/事件、中心冲突、设定、关键物品或关系）。
+
+2. 从以下8个算子中，智能挑选**最相关的4个**（优先选择能为这个具体大纲产生最强模态偏差的算子）：
+
+   1. Physical/Taxonomic Alienation
+   2. Chronological Distortion
+   3. Epistemic/K-world Displacement
+   4. Deontic/O-world Constraint
+   5. Axiological/W-world Inversion
+   6. Counterfactual Bifurcation
+   7. Interface Ontological Rupture
+   8. Recursive Embedding
+
+3. 按以下**精确格式**输出（只输出中文，结构必须完全一致）：
+
+### 🌀 叙事拓扑挑战启动
+
+我根据你的故事大纲，为你智能匹配了以下4个最相关的Possible Worlds Theory思考框架：
+
+1. **[算子名称]**: “你的大纲中……”（用大纲里的具体元素进行个性化描述）
+   **逻辑指令**: “请思考……”（清晰的苏格拉底式引导）
+   **认知提示**: （1-2句简短解释该挑战背后的理论初衷）
+
+2. **[算子名称]**: ……（同上）
+
+3. **[算子名称]**: ……（同上）
+
+4. **[算子名称]**: ……（同上）
+
+现在请从以上4个框架中挑选任意3–5个（或全部），对每个选中的框架，自己写出一条简洁的“If……”变体句子（每条最多25字）。最后，用你自己生成的这些变体，写一个简短的可能世界情节（2–3句话）。
+
+记住：我只提供了思考框架，最终的变体必须100%由你自己创作。`;
 
   try {
     const response = await fetch('https://api.siliconflow.cn/v1/chat/completions', {
@@ -36,23 +59,18 @@ export default async function handler(req, res) {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userInput }
         ],
-        temperature: 0.8,
-        max_tokens: 500
+        temperature: 0.7,
+        max_tokens: 800
       })
     });
 
     const data = await response.json();
-    const raw = data.choices[0].message.content;
-    const lines = raw.split('\n').filter(l => l.trim());
-    const types = ['角色替换', '时空置换', '因果反转', '模态转换', '视角切换'];
-    const variations = types.map((type, idx) => {
-      let text = lines[idx] || '';
-      text = text.replace(/^\d+\.\s*/, '');
-      if (!text) text = `如果...（${type}方向待探索）`;
-      return { type, text };
+    const content = data.choices[0].message.content.trim();
+
+    res.status(200).json({ 
+      html: content   // 直接返回完整HTML格式的输出，方便前端展示
     });
-    res.status(200).json({ variations });
   } catch (err) {
-    res.status(500).json({ error: '生成失败' });
+    res.status(500).json({ error: '生成失败，请稍后重试' });
   }
 }
