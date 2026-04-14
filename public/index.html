@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>可能世界理论创意干预 - 优化排版</title>
+    <title>可能世界理论创意干预 - 纯净排版</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            color: #333;
+            color: #1f2d3d;
             line-height: 1.6;
             font-size: 16px;
         }
@@ -21,27 +21,30 @@
         .header {
             padding: 30px 0;
             text-align: center;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid #e2e8f0;
             margin-bottom: 30px;
         }
         .header h1 {
             font-size: 26px;
             font-weight: 600;
+            letter-spacing: -0.3px;
         }
         textarea {
             width: 100%;
             padding: 15px;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #cbd5e1;
             border-radius: 12px;
             font-size: 16px;
             line-height: 1.5;
             resize: vertical;
             min-height: 140px;
             font-family: inherit;
+            transition: border 0.2s;
         }
         textarea:focus {
             outline: none;
             border-color: #4a6cf7;
+            box-shadow: 0 0 0 2px rgba(74,108,247,0.1);
         }
         button {
             padding: 12px 28px;
@@ -69,72 +72,18 @@
             border-bottom: 2px solid #4a6cf7;
             display: inline-block;
         }
-        /* 卡片样式 - 清晰整洁 */
-        .framework-card {
-            background: #f9fafc;
-            border-radius: 16px;
-            padding: 20px 24px;
-            margin-bottom: 18px;
-            border: 1px solid #e8edf2;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .framework-card:hover {
-            background: #f1f4fa;
-            border-color: #cbd5e1;
-        }
-        .framework-card.selected {
-            background: #eef2ff;
-            border-color: #4a6cf7;
-            box-shadow: 0 2px 8px rgba(74,108,247,0.1);
-        }
-        .fw-name {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 12px;
-        }
-        .fw-desc {
-            font-size: 15px;
-            color: #334155;
-            margin-bottom: 12px;
-            line-height: 1.5;
-        }
-        .logic-block, .cognitive-block {
-            margin-top: 10px;
-            padding-left: 12px;
-            border-left: 3px solid #4a6cf7;
-            background: #ffffffd9;
-            border-radius: 0 8px 8px 0;
-            padding: 10px 14px;
-            font-size: 14px;
-            color: #1f2937;
-        }
-        .logic-label, .cognitive-label {
-            font-weight: 600;
-            color: #4a6cf7;
-            margin-right: 6px;
-        }
-        .supplementary-text {
+        /* 纯文本展示区 - 干净无标记 */
+        .plain-text {
             background: #f8fafc;
-            border-radius: 14px;
-            padding: 20px;
-            margin: 24px 0 16px;
+            border-radius: 16px;
+            padding: 24px 28px;
             border: 1px solid #e2e8f0;
             font-size: 15px;
-            color: #2c3e50;
+            line-height: 1.7;
+            color: #1e293b;
             white-space: pre-wrap;
-            line-height: 1.6;
-        }
-        .selection-info {
-            margin: 20px 0;
-            padding: 12px;
-            background: #f1f5f9;
-            border-radius: 40px;
-            text-align: center;
-            color: #475569;
-            font-size: 14px;
-            font-weight: 500;
+            word-break: break-word;
+            font-family: inherit;
         }
         .footer {
             margin-top: 50px;
@@ -148,8 +97,17 @@
             text-align: center;
             padding: 40px 20px;
             font-size: 16px;
+            border-radius: 16px;
         }
-        .error { color: #e53e3e; background: #fff5f5; border-radius: 12px; }
+        .error {
+            color: #dc2626;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+        .loading {
+            color: #4a6cf7;
+            background: #eff6ff;
+        }
     </style>
 </head>
 <body>
@@ -163,7 +121,7 @@
     </div>
     <div id="resultArea" class="result"></div>
     <div class="footer">
-        🧠 基于可能世界理论提供思考框架 | 点击卡片可标记选择
+        🧠 基于可能世界理论提供思考框架 | 结果纯文本展示，无特殊标记
     </div>
 </div>
 
@@ -171,167 +129,19 @@
     const generateBtn = document.getElementById('generateBtn');
     const userInput = document.getElementById('userInput');
     const resultArea = document.getElementById('resultArea');
-    let selectedIndices = new Set();
 
-    // 解析后端返回的文本，转换为结构化HTML
-    function parseResponseToHTML(rawText) {
-        // 分割行
-        const lines = rawText.split(/\r?\n/);
-        let htmlParts = [];
-        let currentFrameworks = [];
-        let otherContent = [];
-        let inFrameworkList = false;
-        let currentFw = null;
-        let fwCounter = 0;
-
-        // 辅助函数：清理Markdown粗体、斜体标记，转为HTML标签
-        const formatInline = (text) => {
-            return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                       .replace(/\*(.*?)\*/g, '<em>$1</em>');
-        };
-
-        for (let i = 0; i < lines.length; i++) {
-            let line = lines[i];
-            // 检测框架列表开始的标志
-            if (!inFrameworkList && /^\d+\.\s*\*\*\[.*?\]\*\*/.test(line)) {
-                inFrameworkList = true;
-                // 开始解析第一个框架
-            }
-            if (inFrameworkList) {
-                // 匹配形如 "1. **[算子名称]**: 描述内容"
-                const match = line.match(/^(\d+)\.\s*\*\*\[(.*?)\]\*\*:\s*(.*)/);
-                if (match) {
-                    // 保存上一个框架
-                    if (currentFw) {
-                        currentFrameworks.push(currentFw);
-                    }
-                    // 开始新框架
-                    currentFw = {
-                        index: fwCounter++,
-                        name: match[2].trim(),
-                        description: formatInline(match[3].trim()),
-                        logic: '',
-                        cognitive: ''
-                    };
-                    continue;
-                }
-                // 提取逻辑指令行： **逻辑指令**:
-                const logicMatch = line.match(/\*\*逻辑指令\*\*:\s*(.*)/);
-                if (logicMatch && currentFw) {
-                    currentFw.logic = formatInline(logicMatch[1].trim());
-                    continue;
-                }
-                // 提取认知提示行： **认知提示**:
-                const cogMatch = line.match(/\*\*认知提示\*\*:\s*(.*)/);
-                if (cogMatch && currentFw) {
-                    currentFw.cognitive = formatInline(cogMatch[1].trim());
-                    continue;
-                }
-                // 如果遇到空行或下一个数字开头，继续；但也要处理多行描述（某些描述换行）
-                if (currentFw && !line.match(/^\d+\./) && line.trim() !== '') {
-                    // 可能属于当前框架的描述追加（但一般描述在第一行已经完整，这里简单追加到description）
-                    if (!line.includes('**逻辑指令**') && !line.includes('**认知提示**')) {
-                        currentFw.description += ' ' + formatInline(line.trim());
-                    }
-                }
-                // 检测框架列表结束：如果遇到不以数字或空格开头的空行后，且后面没有数字，或者遇到“现在请从以上”等字眼
-                if (line.trim() === '' && i+1 < lines.length && !/^\d+\./.test(lines[i+1])) {
-                    inFrameworkList = false;
-                    if (currentFw) {
-                        currentFrameworks.push(currentFw);
-                        currentFw = null;
-                    }
-                    // 剩余的行作为补充内容
-                    for (let j = i+1; j < lines.length; j++) {
-                        otherContent.push(lines[j]);
-                    }
-                    break;
-                }
-            } else {
-                // 不在列表时收集其他内容（标题、引导语等）
-                if (!/^\d+\./.test(line) && line.trim() !== '' || line.includes('叙事拓扑挑战启动')) {
-                    otherContent.push(line);
-                }
-            }
-        }
-        // 如果最后还没结束，补上currentFw
-        if (currentFw) {
-            currentFrameworks.push(currentFw);
-        }
-
-        // 构建最终HTML
-        let finalHtml = '<div class="result-header">📋 为你匹配的可能世界框架</div>';
-
-        if (currentFrameworks.length === 0) {
-            // 解析失败，降级：直接返回pre格式的原始文本
-            return `<div style="background:#f8f9fa; padding:20px; border-radius:12px; white-space:pre-wrap; font-family:monospace;">${escapeHtml(rawText)}</div>`;
-        }
-
-        // 生成卡片
-        currentFrameworks.forEach((fw, idx) => {
-            finalHtml += `
-                <div class="framework-card" data-fw-index="${idx}">
-                    <div class="fw-name">📌 ${escapeHtml(fw.name)}</div>
-                    <div class="fw-desc">${fw.description}</div>
-                    ${fw.logic ? `<div class="logic-block"><span class="logic-label">🧠 逻辑指令：</span> ${fw.logic}</div>` : ''}
-                    ${fw.cognitive ? `<div class="cognitive-block"><span class="cognitive-label">💡 认知提示：</span> ${fw.cognitive}</div>` : ''}
-                </div>
-            `;
-        });
-
-        // 添加补充内容（如后续的创作引导）
-        if (otherContent.length > 0) {
-            let supplement = otherContent.join('\n').trim();
-            if (supplement) {
-                finalHtml += `<div class="supplementary-text">${formatInline(supplement).replace(/\n/g, '<br>')}</div>`;
-            }
-        }
-
-        // 选择计数栏
-        finalHtml += `<div class="selection-info">✨ 已选择 <span id="selectedCount">0</span> 个框架（点击卡片可选中/取消）</div>`;
-        return finalHtml;
-    }
-
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-            return c;
-        });
-    }
-
-    // 绑定卡片选择事件
-    function bindCardEvents() {
-        const cards = document.querySelectorAll('.framework-card');
-        cards.forEach((card, idx) => {
-            const fwIndex = parseInt(card.getAttribute('data-fw-index'));
-            if (selectedIndices.has(fwIndex)) {
-                card.classList.add('selected');
-            } else {
-                card.classList.remove('selected');
-            }
-            card.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const index = parseInt(card.getAttribute('data-fw-index'));
-                if (selectedIndices.has(index)) {
-                    selectedIndices.delete(index);
-                    card.classList.remove('selected');
-                } else {
-                    selectedIndices.add(index);
-                    card.classList.add('selected');
-                }
-                updateSelectedCount();
-            });
-        });
-    }
-
-    function updateSelectedCount() {
-        const countSpan = document.getElementById('selectedCount');
-        if (countSpan) countSpan.innerText = selectedIndices.size;
+    // 简单的文本清洗：移除常见的 Markdown 标记（可选，保留可读性）
+    function cleanMarkdown(text) {
+        // 移除加粗/斜体标记 ** ** 和 * *，但保留其中的文字
+        let cleaned = text.replace(/\*\*(.*?)\*\*/g, '$1')
+                          .replace(/\*(.*?)\*/g, '$1')
+                          // 移除标题标记 # ## ### 等（独立行）
+                          .replace(/^#{1,6}\s+/gm, '')
+                          // 移除列表标记 1. 2. 前面的数字点（但保留数字内容，仅去除格式）
+                          .replace(/^\d+\.\s+/gm, '')
+                          // 移除多余的换行空白
+                          .replace(/\n{3,}/g, '\n\n');
+        return cleaned.trim();
     }
 
     generateBtn.addEventListener('click', async () => {
@@ -352,22 +162,32 @@
             const data = await res.json();
             if (data.error) throw new Error(data.error);
 
-            // 解析返回的纯文本内容
-            const rawContent = data.html || data.content || '';
+            let rawContent = data.html || data.content || '';
             if (!rawContent) throw new Error('返回内容为空');
 
-            const structuredHtml = parseResponseToHTML(rawContent);
-            resultArea.innerHTML = structuredHtml;
-            // 重置选择集
-            selectedIndices.clear();
-            bindCardEvents();
-            updateSelectedCount();
+            // 清除残留的星号、井号等标记，使显示纯净
+            const cleanContent = cleanMarkdown(rawContent);
 
+            // 直接以段落形式显示，保留原始换行
+            resultArea.innerHTML = `
+                <div class="result-header">📋 探索结果</div>
+                <div class="plain-text">${escapeHtml(cleanContent)}</div>
+            `;
         } catch (err) {
             console.error(err);
             resultArea.innerHTML = '<div class="error">⚠️ 生成失败，请检查网络或稍后重试</div>';
         }
     });
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
 </script>
 </body>
 </html>
