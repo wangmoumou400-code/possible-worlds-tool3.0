@@ -5,222 +5,161 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>可能世界理论创意干预</title>
     <style>
+        /* 全局重置：彻底消除混乱样式 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; }
+        
+        /* 极简配色体系 */
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --primary-light: #a5b4fc;
-            --bg-gradient: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #6366f1 100%);
-            --card-bg: #ffffff;
-            --card-hover: #f8faff;
-            --text-primary: #1e293b;
-            --text-secondary: #64748b;
-            --border-radius: 20px;
-            --shadow: 0 10px 40px rgba(0,0,0,0.15);
-            --shadow-hover: 0 15px 50px rgba(99, 102, 241, 0.25);
+            --primary: #4a6cf7;
+            --light-bg: #f7f8fc;
+            --text-main: #333;
+            --text-light: #666;
+            --border: #e0e0e0;
+            --card: #ffffff;
+            --hover: #eef2ff;
         }
+
         body {
-            background: var(--bg-gradient);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 24px 16px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
+            background: #ffffff; /* 背景改为纯白，更清爽 */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            color: var(--text-main);
+            line-height: 1.8; /* 优化行距，舒服阅读 */
+            font-size: 16px; /* 基础字号放大 */
         }
+
+        /* 容器：居中且限制最大宽度 */
         .container {
-            max-width: 1000px;
-            width: 100%;
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            transition: all 0.3s ease;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
         }
+
+        /* 头部：去掉复杂渐变，简洁大气 */
         .header {
-            background: var(--bg-gradient);
-            color: white;
-            padding: 48px 32px;
+            padding: 30px 0;
             text-align: center;
-            position: relative;
-            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
         }
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
-            pointer-events: none;
-        }
+
         .header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            position: relative;
-            z-index: 1;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-main);
         }
-        .header p {
-            font-size: 15px;
-            opacity: 0.95;
-            position: relative;
-            z-index: 1;
-        }
-        .content {
-            padding: 40px 32px;
-        }
+
+        /* 输入区域 */
         .input-section {
-            margin-bottom: 32px;
+            margin-bottom: 25px;
         }
+
         textarea {
             width: 100%;
-            padding: 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 16px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
             font-size: 16px;
-            line-height: 1.7;
+            line-height: 1.6;
             resize: vertical;
-            min-height: 180px;
+            min-height: 150px;
             font-family: inherit;
-            transition: all 0.3s ease;
-            background: #fafafa;
+            transition: border 0.2s;
         }
+
         textarea:focus {
             outline: none;
             border-color: var(--primary);
-            background: white;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
         }
+
         button {
-            padding: 16px 40px;
+            padding: 12px 30px;
             border: none;
-            border-radius: 50px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            background: var(--bg-gradient);
-            color: white;
-            margin-top: 20px;
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
-            transition: all 0.3s ease;
-        }
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(99, 102, 241, 0.4);
-        }
-        button:active {
-            transform: translateY(0);
-        }
-        .result {
-            margin-top: 40px;
-            font-size: 16px;
-            line-height: 1.7;
-        }
-        .result-header {
-            font-size: 19px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e2e8f0;
-        }
-        .framework-card {
-            background: var(--card-hover);
-            border-radius: 16px;
-            padding: 22px;
-            margin-bottom: 16px;
-            border-left: 5px solid var(--primary-light);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            font-size: 16px;
-        }
-        .framework-card:hover {
-            background: #f1f0ff;
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-hover);
-        }
-        .framework-card.selected {
-            background: #ede9fe;
-            border-left-color: var(--primary-dark);
-            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.18);
-        }
-        .framework-name {
-            font-size: 17px;
-            color: var(--primary-dark);
-            font-weight: 700;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .logic {
-            margin: 10px 0;
-            font-size: 16px;
-            line-height: 1.7;
-            color: var(--text-primary);
-        }
-        .cognitive {
-            font-size: 15px;
-            color: var(--text-secondary);
-            font-style: italic;
-            padding: 8px 12px;
-            background: rgba(99, 102, 241, 0.08);
             border-radius: 8px;
-            margin-top: 8px;
-        }
-        .selection-info {
-            margin: 18px 0;
-            padding: 14px;
-            background: #f0f9ff;
-            border-radius: 12px;
-            font-size: 15px;
-            text-align: center;
-            color: #0369a1;
-            border: 1px solid #bae6fd;
-        }
-        .final-note {
-            margin-top: 30px;
-            padding: 22px;
-            background: #f8faff;
-            border-radius: 16px;
-            text-align: center;
             font-size: 16px;
-            line-height: 1.7;
-            color: var(--text-secondary);
-            border: 1px solid #e2e8f0;
+            font-weight: 500;
+            cursor: pointer;
+            background: var(--primary);
+            color: white;
+            margin-top: 15px;
+            transition: background 0.2s;
         }
+
+        button:hover {
+            background: #3b5bdb;
+        }
+
+        /* 结果区域：彻底简化 */
+        .result {
+            margin-top: 30px;
+        }
+
+        /* 结果标题 */
+        .result-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        /* 框架卡片：极简重置 */
+        .framework-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px; /* 确保字体统一 */
+        }
+
+        .framework-card:hover {
+            background: var(--hover);
+            border-color: #d0d0d0;
+        }
+
+        .framework-card.selected {
+            background: #eef2ff;
+            border-color: var(--primary);
+        }
+
+        /* 去掉所有强制加粗和特殊符号，原样显示 */
+        .framework-name, .logic, .cognitive {
+            font-size: 16px;
+            color: var(--text-main);
+            font-weight: normal; /* 强制不加粗 */
+            font-style: normal; /* 强制不斜体 */
+            margin-bottom: 8px;
+        }
+
+        /* 信息栏 */
+        .selection-info {
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--light-bg);
+            border-radius: 10px;
+            text-align: center;
+            color: var(--text-light);
+            border: 1px solid var(--border);
+        }
+
         .footer {
-            padding: 22px;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
             text-align: center;
             font-size: 13px;
-            color: #94a3b8;
-            border-top: 1px solid #f1f5f9;
-            background: #fafafa;
+            color: var(--text-light);
         }
-        .loading {
+
+        .loading, .error {
             text-align: center;
-            padding: 50px 20px;
-            color: var(--primary);
-            font-size: 17px;
-        }
-        .error {
-            color: #dc2626;
-            padding: 18px;
-            background: #fef2f2;
-            border-radius: 12px;
-            border: 1px solid #fecaca;
-            text-align: center;
+            padding: 40px 20px;
             font-size: 16px;
         }
-        .result h3 {
-            font-size: 19px;
-            color: var(--text-primary);
-            margin-bottom: 18px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--primary-light);
-        }
+
+        .error { color: #e53935; }
     </style>
 </head>
 <body>
@@ -236,7 +175,7 @@
         <div id="resultArea" class="result"></div>
     </div>
     <div class="footer">
-        实验用途 · 严格过程导向 · 仅提供思考框架
+       仅提供思考框架
     </div>
 </div>
 
@@ -264,12 +203,14 @@
             const data = await res.json();
             if (data.error) throw new Error(data.error);
 
+            // 核心修改：直接输出HTML，不再进行任何格式化
             resultArea.innerHTML = `
                 <div class="result-header">📋 为你匹配的可能世界框架</div>
-                ${data.html}
+                <div class="content-wrapper">${data.html}</div>
                 <div class="selection-info">已选择 <span id="selectedCount">0</span> 个框架</div>
             `;
 
+            // 绑定选择事件
             const cards = document.querySelectorAll('.framework-card');
             cards.forEach((card, idx) => {
                 card.dataset.idx = idx;
