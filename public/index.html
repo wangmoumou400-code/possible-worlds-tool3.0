@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>叙事拓扑挑战 - 可能世界理论创意干预</title>
+    <title>可能世界理论创意干预</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -54,14 +54,14 @@
             pointer-events: none;
         }
         .header h1 {
-            font-size: 36px;
+            font-size: 28px;
             font-weight: 700;
             margin-bottom: 12px;
             position: relative;
             z-index: 1;
         }
         .header p {
-            font-size: 16px;
+            font-size: 15px;
             opacity: 0.95;
             position: relative;
             z-index: 1;
@@ -95,7 +95,7 @@
             padding: 16px 40px;
             border: none;
             border-radius: 50px;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 600;
             cursor: pointer;
             background: var(--bg-gradient);
@@ -113,73 +113,56 @@
         }
         .result {
             margin-top: 40px;
+            font-size: 16px;
+            line-height: 1.7;
         }
         .result-header {
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 24px;
-            padding-bottom: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
             border-bottom: 2px solid #e2e8f0;
         }
         .framework-card {
             background: var(--card-hover);
             border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
+            padding: 22px;
+            margin-bottom: 16px;
             border-left: 5px solid var(--primary-light);
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-        }
-        .framework-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--primary);
-            transform: scaleY(0);
-            transition: transform 0.3s ease;
+            font-size: 16px;
         }
         .framework-card:hover {
             background: #f1f0ff;
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: var(--shadow-hover);
-        }
-        .framework-card:hover::before {
-            transform: scaleY(1);
         }
         .framework-card.selected {
             background: #ede9fe;
             border-left-color: var(--primary-dark);
-            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.2);
-        }
-        .framework-card.selected::before {
-            transform: scaleY(1);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.18);
         }
         .framework-name {
-            font-size: 16px;
+            font-size: 17px;
             color: var(--primary-dark);
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        .framework-name::before {
-            content: '🔹';
-            font-size: 14px;
-        }
         .logic {
-            margin: 12px 0;
-            font-size: 15px;
+            margin: 10px 0;
+            font-size: 16px;
             line-height: 1.7;
             color: var(--text-primary);
         }
         .cognitive {
-            font-size: 14px;
+            font-size: 15px;
             color: var(--text-secondary);
             font-style: italic;
             padding: 8px 12px;
@@ -188,28 +171,28 @@
             margin-top: 8px;
         }
         .selection-info {
-            margin: 20px 0;
-            padding: 16px;
+            margin: 18px 0;
+            padding: 14px;
             background: #f0f9ff;
             border-radius: 12px;
-            font-size: 14px;
+            font-size: 15px;
             text-align: center;
             color: #0369a1;
             border: 1px solid #bae6fd;
         }
         .final-note {
-            margin-top: 36px;
-            padding: 24px;
+            margin-top: 30px;
+            padding: 22px;
             background: #f8faff;
             border-radius: 16px;
             text-align: center;
-            font-size: 15px;
+            font-size: 16px;
             line-height: 1.7;
             color: var(--text-secondary);
             border: 1px solid #e2e8f0;
         }
         .footer {
-            padding: 24px;
+            padding: 22px;
             text-align: center;
             font-size: 13px;
             color: #94a3b8;
@@ -218,46 +201,37 @@
         }
         .loading {
             text-align: center;
-            padding: 60px 20px;
+            padding: 50px 20px;
             color: var(--primary);
-            font-size: 18px;
+            font-size: 17px;
         }
         .error {
             color: #dc2626;
-            padding: 20px;
+            padding: 18px;
             background: #fef2f2;
             border-radius: 12px;
             border: 1px solid #fecaca;
             text-align: center;
+            font-size: 16px;
         }
-        /* 解析AI返回的markdown格式 */
         .result h3 {
-            font-size: 22px;
+            font-size: 19px;
             color: var(--text-primary);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
+            margin-bottom: 18px;
+            padding-bottom: 8px;
             border-bottom: 2px solid var(--primary-light);
-        }
-        .result ol {
-            padding-left: 20px;
-            margin-bottom: 20px;
-        }
-        .result li {
-            margin-bottom: 16px;
-            line-height: 1.7;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <h1>🌀 叙事拓扑挑战</h1>
+        <h1>🌀 可能世界探索</h1>
     </div>
     <div class="content">
         <div class="input-section">
-            <textarea id="userInput" placeholder="请输入你的故事大纲（100-150字即可）
-"></textarea>
-            <button id="generateBtn">🚀 启动拓扑挑战</button>
+            <textarea id="userInput" placeholder="请输入你的故事大纲（100-150字即可）"></textarea>
+            <button id="generateBtn">🚀 启动探索</button>
         </div>
         <div id="resultArea" class="result"></div>
     </div>
@@ -272,23 +246,6 @@
     const resultArea = document.getElementById('resultArea');
     let selectedSet = new Set();
 
-    // 简单markdown转HTML（适配AI返回的格式）
-    function mdToHtml(md) {
-        let html = md
-            .replace(/### (.*?)\n/g, '<h3>$1</h3>')
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\n\n/g, '</p><p>')
-            .replace(/\n/g, '<br>')
-            .replace(/1\.\s\*\*(.*?)\*\*:/g, '<div class="framework-card" data-idx="$1"><div class="framework-name">$1</div>')
-            .replace(/\*\*逻辑指令\*\*:/g, '<div class="logic"><strong>逻辑指令：</strong>')
-            .replace(/\*\*认知提示\*\*:/g, '</div><div class="cognitive"><strong>认知提示：</strong>')
-            .replace(/2\.\s\*\*(.*?)\*\*:/g, '</div></div><div class="framework-card" data-idx="$1"><div class="framework-name">$1</div>')
-            .replace(/3\.\s\*\*(.*?)\*\*:/g, '</div></div><div class="framework-card" data-idx="$1"><div class="framework-name">$1</div>')
-            .replace(/4\.\s\*\*(.*?)\*\*:/g, '</div></div><div class="framework-card" data-idx="$1"><div class="framework-name">$1</div>')
-            .replace(/---/g, '</div></div><div class="final-note">');
-        return html;
-    }
-
     generateBtn.addEventListener('click', async () => {
         const text = userInput.value.trim();
         if (!text) {
@@ -296,7 +253,7 @@
             return;
         }
 
-        resultArea.innerHTML = '<div class="loading">🔄 正在分析大纲并生成个性化拓扑挑战……</div>';
+        resultArea.innerHTML = '<div class="loading">🔄 正在分析大纲……</div>';
 
         try {
             const res = await fetch('/api/generate', {
@@ -307,14 +264,12 @@
             const data = await res.json();
             if (data.error) throw new Error(data.error);
 
-            // 把AI返回的纯文本转成美观的HTML
             resultArea.innerHTML = `
-                <div class="result-header">📋 为你匹配的叙事拓扑框架</div>
-                ${mdToHtml(data.html)}
+                <div class="result-header">📋 为你匹配的可能世界框架</div>
+                ${data.html}
                 <div class="selection-info">已选择 <span id="selectedCount">0</span> 个框架</div>
             `;
 
-            // 绑定点击选择
             const cards = document.querySelectorAll('.framework-card');
             cards.forEach((card, idx) => {
                 card.dataset.idx = idx;
