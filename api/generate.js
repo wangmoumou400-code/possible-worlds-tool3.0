@@ -47,22 +47,22 @@ export default async function handler(req, res) {
 记住：我只提供了思考框架，最终的变体必须100%由你自己创作。`;
 
   try {
-    const response = await fetch('https://models.inference.ai.azure.com/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.WORLD_TOOL}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userInput }
-        ],
-        temperature: 0.7,
-        max_tokens: 900
-      })
-    });
+  // const response = await fetch('https://api.github.com/models/chat/completions', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${process.env.WORLD_TOOL}`
+  },
+  body: JSON.stringify({
+    model: 'gpt-4o', // 确认你申请的模型支持此名称
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userInput }
+    ],
+    temperature: 0.7,
+    max_tokens: 900
+  })
+});
 
     if (!response.ok) {
       const errorText = await response.text();
