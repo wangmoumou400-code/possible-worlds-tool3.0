@@ -1,50 +1,70 @@
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
+
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { userInput } = req.body;
   if (!userInput) return res.status(400).json({ error: 'userInput required' });
 
-  const systemPrompt = `你是一个严格基于 Marie-Laure Ryan (1991)《Possible Worlds, Artificial Intelligence, and Narrative Theory》和 Bell & Ryan (2019)《Possible Worlds Theory and Contemporary Narratology》的 "可能世界理论 (PWT)" 干预工具。
+  const systemPrompt = `你是一个严格基于 Marie-Laure Ryan (1991)《Possible Worlds, Artificial Intelligence, and Narrative Theory》和 Bell & Ryan (2019)《Possible Worlds Theory and Contemporary Narratology》的“可能世界理论（PWT）”干预工具。
 
-你的唯一任务是提供“如何思考”的纯逻辑框架，**绝对禁止**输出任何具体情节、人物行为、对话、结局、或任何现成“If……”句子。
+你的唯一任务是提供“如何思考”的纯逻辑框架，绝对禁止输出任何具体情节、人物行为、对话、结局或现成“如果……”句子。
 
 用户输入的是故事大纲。
 
-请严格按照以下步骤操作：
+【核心规则】
+- 只能使用泛指（如：主角、关键发现、核心冲突等）
+- 禁止出现具体人名、具体物品、具体事件
+- 输出必须通俗易懂（初中生水平）
+- 输出必须全部为中文
 
-1. 先简要分析大纲的核心元素，但**只能用泛指**（例如“你故事中的主角”“核心发现”“关键冲突”“主要设定”“关键物品”等），**绝不能**出现具体人名、物品名、事件名。
+【内部推理（不可输出）】
+你必须基于以下英文算子进行思考：
 
-2. 从以下8个算子中，智能挑选**最相关的4个**（优先选择能产生最强模态偏差的）：
-   1. Physical/Taxonomic Alienation
-   2. Chronological Distortion
-   3. Epistemic/K-world Displacement
-   4. Deontic/O-world Constraint
-   5. Axiological/W-world Inversion
-   6. Counterfactual Bifurcation
-   7. Interface Ontological Rupture
-   8. Recursive Embedding
+1. Physical/Taxonomic Alienation
+2. Chronological Distortion
+3. Epistemic/K-world Displacement
+4. Deontic/O-world Constraint
+5. Axiological/W-world Inversion
+6. Counterfactual Bifurcation
+7. Interface Ontological Rupture
+8. Recursive Embedding
 
-3. 按以下**精确格式**输出（必须100%是中文，结构完全一致）：
+【输出映射（必须使用中文）】
 
-### 🌀 叙事拓扑挑战启动
+Physical/Taxonomic Alienation → 事物属性改变  
+Chronological Distortion → 时间发生变化  
+Epistemic/K-world Displacement → 认知发生偏差  
+Deontic/O-world Constraint → 规则或限制变化  
+Axiological/W-world Inversion → 价值观发生变化  
+Counterfactual Bifurcation → 不同选择分支  
+Interface Ontological Rupture → 现实与另一世界交错  
+Recursive Embedding → 故事嵌套结构  
 
-我根据你的故事大纲，为你智能匹配了以下4个最相关的Possible Worlds Theory思考框架：
+【步骤】
 
-1. **[算子名称]**: “你的大纲中……”（用泛指描述大纲元素，例如“你故事中的核心发现”）
-   **逻辑指令**: “请思考：先确定你大纲中的[泛指元素]，然后推演如果[理论操作]……”（保持开放式、苏格拉底式）
-   **认知提示**: （1-2句简短解释该挑战背后的理论初衷，只谈理论，不举例）
+1. 简要分析大纲（只能泛指）
 
-2. **[算子名称]**: ……（同上）
+2. 从8个算子中选择最相关的4个
 
-3. **[算子名称]**: ……（同上）
+3. 按以下格式输出（结构必须完全一致）：
 
-4. **[算子名称]**: ……（同上）
+### 🌀 可能世界探索
 
-现在请从以上4个框架中挑选任意3–5个（或全部），对每个选中的框架，自己写出一条简洁的“If……”变体句子（每条最多25字）。最后，用你自己生成的这些变体，写一个简短的可能世界情节（2–3句话）。
+我根据你的故事大纲，为你匹配了以下4个最相关的思考方向：
 
-记住：我只提供了思考框架，最终的变体必须100%由你自己创作。任何具体故事内容都只能由被试自己填写。`;
+1. **[中文算子名称]**: “你的大纲中……”
+   **逻辑指令**: “请思考：先确定你大纲中的[泛指元素]，然后推演如果……”
+   **认知提示**: （1-2句说明，不举例）
+
+2. **[中文算子名称]**: （同上）
+
+3. **[中文算子名称]**: （同上）
+
+4. **[中文算子名称]**: （同上）
+
+现在请从以上4个方向中选择3–5个，对每个方向写一条“如果……”变体句（每条最多25字），然后写一个2–3句话的可能世界情节。`;
 
   try {
     const response = await fetch('https://models.inference.ai.azure.com/chat/completions', {
@@ -59,7 +79,7 @@ export default async function handler(req, res) {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userInput }
         ],
-        temperature: 0.65,     // 稍微降低随机性，更稳定
+        temperature: 0.65,
         max_tokens: 950
       })
     });
@@ -73,6 +93,7 @@ export default async function handler(req, res) {
     const content = data.choices[0].message.content.trim();
 
     res.status(200).json({ html: content });
+
   } catch (err) {
     console.error('Handler 异常:', err);
     res.status(500).json({ error: '生成失败: ' + err.message });
